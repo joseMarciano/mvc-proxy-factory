@@ -48,4 +48,42 @@ class NegociacaoController {
 
         this._inputData.focus();
     }
+
+    importaNegociacoes() {
+        const service = new NegociacaoService(new HttpService());
+
+        Promise.all([
+            service.obterNegociacoesDaSemana(),
+            service.obterNegociacoesDaSemanaAnterior(),
+            service.obterNegociacoesDaSemanaRetrasada(),
+        ]).then(negociacoes => {
+            negociacoes
+                .reduce((flatten, array) => flatten.concat(array), [])
+                .forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
+
+            this._mensagem.setTexto = 'Negociacoes importadas com sucesso';
+        })
+            .catch(erro => this._mensagem.setTexto = erro);
+
+        // service.obterNegociacoesDaSemana()
+        // .then((negociacoes) => {
+        //     this._mensagem.setTexto = 'Negociações importadas com sucesso';
+        //     negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao))  
+        // })
+        // .catch((erro) => this._mensagem.setTexto = erro);
+
+        // service.obterNegociacoesDaSemanaAnterior()
+        // .then((negociacoes) => {
+        //     this._mensagem.setTexto = 'Negociações importadas com sucesso';
+        //     negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao))  
+        // })
+        // .catch((erro) => this._mensagem.setTexto = erro);
+
+        // service.obterNegociacoesDaSemanaRetrasada()
+        // .then((negociacoes) => {
+        //     this._mensagem.setTexto = 'Negociações importadas com sucesso';
+        //     negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao))  
+        // })
+        // .catch((erro) => this._mensagem.setTexto = erro);
+    }
 }
